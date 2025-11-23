@@ -57,132 +57,150 @@ class Library:
         for bk in sorted_bks[:5]:
             print(bk.title, "- Borrowed", bk.times_borrowed, "times")
 
-    def save_data(self):
-        data = {
-            "bks": [
-                {
-                    "book_id": bk.book_id,
-                    "title": bk.title,
-                    "author": bk.author,
-                    "quantity": bk.quantity,
-                    "price": bk.price,
-                    "mbd": bk.max_borrow_days,
-                    "times_borrowed": bk.times_borrowed
-                }
-                for bk in self.bks
-            ],
-            "usrs": [
-                {
-                    "user_id": usr.user_id,
-                    "name": usr.name,
-                    "role": usr.role,
-                    "brw_bks": {
-                        str(bid): dd.strftime('%Y-%m-%d')
-                        for bid, (bk, dd) in usr.brw_bks.items()
-                    }
-                }
-                for usr in self.usrs
-            ]
-        }
-        with open(self.df, "w") as f:
-            json.dump(data, f, indent=2)
+    def saved(self):
+        data = {'bks': [], 'usrs': []}
+        for bk in self.bks:
+            data['bks'].append({'book_id': bk.book_id,
+                                'title': bk.title,
+                                'author': bk.author,
+                                'quantity': bk.quantity,
+                                'price': bk.price,
+                                'mbd': bk.max_borrow_days,
+                                'times_borrowed': bk.times_borrowed})
+        for usr in self.usrs:
+            brw = {}
+            for bid, (bk, dd) in usr.brw_bks.items():
+                brw[str(bid)] = dd.strftime('%Y-%m-%d')
+            data['usrs'].append({'user_id': usr.user_id,
+                                 'name': usr.name,
+                                 'role': usr.role,
+                                 'borrowed_books': brw})
+        try:
+            with open(self.df, 'w') as f:
+                json.dump(data, f, indent=4)
+            print("Data saved.")
+        except Exception as e:
+            print("Error saving:", e)
 
     def load_data(self):
         if not os.path.exists(self.df):
             return
-        with open(self.df, "r") as f:
-            data = json.load(f)
-        # Load books
-        self.bks = []
-        for b in data.get("bks", []):
-            bk = Book(
-                b["book_id"], b["title"], b["author"],
-                b["quantity"], b["price"], b["mbd"]
-            )
-            bk.times_borrowed = b.get("times_borrowed", 0)
-            self.bks.append(bk)
-        # Load users
-        self.usrs = []
-        for u in data.get("usrs", []):
-            usr = User(u["user_id"], u["name"], rl=u.get("role", "Member"))
-            # Load borrowed books
-            for bid, dd_str in u.get("brw_bks", {}).items():
-                bk = self.gbi(int(bid))
-                if bk:
-                    due_dt = datetime.strptime(dd_str, "%Y-%m-%d")
-                    usr.brw_bks[bk.book_id] = (bk, due_dt)
-            self.usrs.append(usr)
+        try:
+            with open(self.df, 'r') as f:
+                data = json.load(f)
+            self.bks = []
+            for bkdata in data.get('bks', []):
+                bk = Book(
+                    bkdata['book_id'],
+                    bkdata['title'],
+                    bkdata['author'],
+                    bkdata['quantity'],
+                    bkdata['price'],
+                    bkdata['mbd']
+                )
+                bk.times_borrowed = bkdata.get('times_borrowed', 0)
+                self.bks.append(bk)
+            self.usrs = []
+            for usrdata in data.get('usrs', []):
+                usr = User(
+                    usrdata['user_id'],
+                    usrdata['name'],
+                    usrdata.get('role', 'Member'))
+                # Assign borrowed books
+                for bid_str, dd_str in usrdata.get('borrowed_books', {}).items():
+                    bk = self.gbi(int(bid_str))
+                    if bk:
+                        dd = datetime.strptime(dd_str, '%Y-%m-%d')
+                        usr.brw_bks[bk.book_id] = (bk, dd)
+                self.usrs.append(usr)
+            print("Data loaded.")
+        except Exception as e:
+            print("Error loading:", e)
 
-# Sample main function for running the CLI menu
 def main():
     lib = Library()
     while True:
-        print("\n---- Library Menu ----")
-        print("1. Show Books")
-        print("2. Show Users")
-        print("3. Add Book")
-        print("4. Add User")
-        print("5. Borrow Book")
-        print("6. Return Book")
-        print("7. View Popular Books")
-        print("8. Overdue Report")
-        print("9. User Borrow Summary")
-        print("10. Save and Exit")
-
         Notifications.due_date(lib.usrs)
-
-        choice = input("Enter your choice: ")
-        if choice == "1":
+        print("Library Menu")
+        print("1. Show books")
+        print("2. Borrow book")
+        print("3. Return book")
+        print("4. View borrowed")
+        print("5. Popular books")
+        print("6. Overdue books report")
+        print("7. User borrow summary")
+        print("8. Add user")
+        print("9. Show users")
+        print("10. Save & exit")
+        choice = input("Choose option: ")
+        if choice == '1':
             lib.showb()
-        elif choice == "2":
-            lib.showu()
-        elif choice == "3":
-            # Example: get input and add book
-            book_id = int(input("ID: "))
-            title = input("Title: ")
-            author = input("Author: ")
-            quantity = int(input("Quantity: "))
-            price = float(input("Price: "))
-            mbd = int(input("Max Borrow Days: "))
-            bk = Book(book_id, title, author, quantity, price, mbd)
-            lib.addb(bk)
-        elif choice == "4":
-            user_id = int(input("User ID: "))
-            name = input("Name: ")
-            role = input("Role (Member/Admin): ")
-            usr = User(user_id, name, role)
-            lib.addu(usr)
-        elif choice == "5":
-            uid = int(input("User ID: "))
-            bid = int(input("Book ID: "))
-            days = int(input("Days to borrow: "))
+        elif choice == '2':
+            try:
+                uid = int(input("User ID: "))
+                bid = int(input("Book ID: "))
+                days = int(input("Days to borrow: "))
+            except ValueError:
+                print("Please enter valid number")
+                continue
             usr = lib.gui(uid)
             bk = lib.gbi(bid)
             if usr and bk:
                 usr.borrow_book(bk, days)
             else:
-                print("Invalid User ID or Book ID.")
-        elif choice == "6":
-            uid = int(input("User ID: "))
-            bid = int(input("Book ID: "))
+                print("User or book not found")
+        elif choice == '3':
+            try:
+                uid = int(input("User ID: "))
+                bid = int(input("Book ID: "))
+            except ValueError:
+                print("Please enter valid number")
+                continue
             usr = lib.gui(uid)
             bk = lib.gbi(bid)
             if usr and bk:
                 usr.return_book(bk)
             else:
-                print("Invalid User ID or Book ID.")
-        elif choice == "7":
+                print("User or book not found")
+        elif choice == '4':
+            try:
+                uid = int(input("User ID: "))
+            except ValueError:
+                print("Invalid ID")
+                continue
+            usr = lib.gui(uid)
+            if usr:
+                usr.view_borrowed_books()
+            else:
+                print("User not found")
+        elif choice == '5':
             lib.show_pop_bks()
-        elif choice == "8":
+        elif choice == '6':
             Reports.obr(lib.usrs)
-        elif choice == "9":
+        elif choice == '7':
             Reports.ubs(lib.usrs)
-        elif choice == "10":
-            lib.save_data()
-            print("Data saved. Goodbye!")
+        elif choice == '8':
+            try:
+                new_uid = int(input("New user ID: "))
+                if lib.gui(new_uid):
+                    print("User ID taken")
+                    continue
+                name = input("Name: ")
+                role = input("Role (Admin/Member): ")
+                if role not in ("Admin", "Member"):
+                    role = "Member"
+                lib.addu(User(new_uid, name, role))
+                print(name, "with user ID", new_uid, "added as", role)
+            except ValueError:
+                print("Invalid input")
+        elif choice == '9':
+            lib.showu()
+        elif choice == '10':
+            lib.saved()
+            print("Data is saved")
             break
         else:
-            print("Invalid choice. Try again.")
+            print("Only choose between 1 to 10")
 
 if __name__ == "__main__":
     main()
