@@ -1,0 +1,198 @@
+{
+    "bks": [
+        {
+            "book_id": 1,
+            "title": "Python Crash Course",
+            "author": "E. Matthes",
+            "quantity": 4,
+            "price": 350,
+            "mbd": 14,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 2,
+            "title": "1984",
+            "author": "George Orwell",
+            "quantity": 2,
+            "price": 250,
+            "mbd": 10,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 3,
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "quantity": 5,
+            "price": 300,
+            "mbd": 12,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 4,
+            "title": "Pride and Prejudice",
+            "author": "Jane Austen",
+            "quantity": 3,
+            "price": 280,
+            "mbd": 15,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 5,
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "quantity": 6,
+            "price": 320,
+            "mbd": 10,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 6,
+            "title": "Moby Dick",
+            "author": "Herman Melville",
+            "quantity": 2,
+            "price": 400,
+            "mbd": 14,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 7,
+            "title": "War and Peace",
+            "author": "Leo Tolstoy",
+            "quantity": 1,
+            "price": 500,
+            "mbd": 20,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 8,
+            "title": "The Catcher in the Rye",
+            "author": "J.D. Salinger",
+            "quantity": 7,
+            "price": 270,
+            "mbd": 12,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 9,
+            "title": "The Hobbit",
+            "author": "J.R.R. Tolkien",
+            "quantity": 10,
+            "price": 350,
+            "mbd": 14,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 10,
+            "title": "Fahrenheit 451",
+            "author": "Ray Bradbury",
+            "quantity": 4,
+            "price": 300,
+            "mbd": 10,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 11,
+            "title": "Brave New World",
+            "author": "Aldous Huxley",
+            "quantity": 4,
+            "price": 330,
+            "mbd": 14,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 12,
+            "title": "The Odyssey",
+            "author": "Homer",
+            "quantity": 3,
+            "price": 370,
+            "mbd": 20,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 13,
+            "title": "Crime and Punishment",
+            "author": "Fyodor Dostoevsky",
+            "quantity": 2,
+            "price": 450,
+            "mbd": 20,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 14,
+            "title": "Jane Eyre",
+            "author": "Charlotte Bront\u00eb",
+            "quantity": 5,
+            "price": 310,
+            "mbd": 15,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 15,
+            "title": "The Divine Comedy",
+            "author": "Dante Alighieri",
+            "quantity": 1,
+            "price": 550,
+            "mbd": 25,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 16,
+            "title": "The Brothers Karamazov",
+            "author": "Fyodor Dostoevsky",
+            "quantity": 2,
+            "price": 480,
+            "mbd": 20,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 17,
+            "title": "Les Mis\u00e9rables",
+            "author": "Victor Hugo",
+            "quantity": 3,
+            "price": 420,
+            "mbd": 20,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 18,
+            "title": "Dracula",
+            "author": "Bram Stoker",
+            "quantity": 6,
+            "price": 295,
+            "mbd": 12,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 19,
+            "title": "The Iliad",
+            "author": "Homer",
+            "quantity": 3,
+            "price": 380,
+            "mbd": 20,
+            "times_borrowed": 0
+        },
+        {
+            "book_id": 20,
+            "title": "The Grapes of Wrath",
+            "author": "John Steinbeck",
+            "quantity": 4,
+            "price": 310,
+            "mbd": 15,
+            "times_borrowed": 0
+        }
+    ],
+    "usrs": [
+        {
+            "user_id": 100,
+            "name": "Alice",
+            "role": "Member",
+            "borrowed_books": {}
+        },
+        {
+            "user_id": 200,
+            "name": "Bob",
+            "role": "Admin",
+            "borrowed_books": {}
+        }
+    ]
+}
